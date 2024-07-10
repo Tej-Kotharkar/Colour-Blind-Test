@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Blind Test App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            background-color: black;
+            color: white;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        .image-container {
+            max-width: 50%;
+            float: left;
+        }
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: auto;
+            margin-top: 20px;
+        }
+        .buttons {
+            margin-top: 20px;
+            float: right;
+        }
+        .buttons button {
+            font-size: 20px;
+            margin: 5px;
+            padding: 10px 20px;
+            border-radius: 50%;
+            background-color: #d3d3d3; /* Very light grey color */
+            border: none;
+            color: black;
+            cursor: pointer;
+        }
+        .buttons button:hover {
+            background-color: #b0b0b0; /* Slightly darker grey for hover effect */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="image-container">
+        <img id="questionImage" src="" alt="Question Image">
+    </div>
+    <div class="buttons">
+        <button onclick="checkAnswer(1)">1</button>
+        <button onclick="checkAnswer(2)">2</button>
+        <button onclick="checkAnswer(3)">3</button>
+        <button onclick="checkAnswer(4)">4</button>
+        <button onclick="checkAnswer(5)">5</button>
+        <button onclick="checkAnswer(6)">6</button>
+        <button onclick="checkAnswer(7)">7</button>
+        <button onclick="checkAnswer(8)">8</button>
+        <button onclick="checkAnswer(9)">9</button>
+        <button onclick="checkAnswer(null)">Nothing</button>
+    </div>
+</div>
+
+<script>
+    let currentQuestion = 0;
+    const totalQuestions = 15;
+    let score = 0;
+    let correctAnswer = 0;
+    const images = { 1: ['1-1.png', '1-2.png'],
+     2: ['2-1.png', '2-2.png'],
+      3: ['3-1.png', '3-2.png'],
+       4: ['4-1.png', '4-2.png'],
+        5: ['5-1.png'],
+         6: ['6-1.png', '6-2.png'],
+          7: ['7-1.png'],
+           8: ['8-1.png'],
+            9: ['9-1.png', '9-2.png'] };
+    function getRandomInt(max) {
+        return Math.floor(Math.random() * max) + 1;
+    }
+
+    function nextQuestion() {
+        if (currentQuestion < totalQuestions) {
+            currentQuestion++;
+            let number = getRandomInt(9); // Choose a number between 1 and 9
+            correctAnswer = number;
+            let imageArray = images[number];
+            let imageFile = imageArray[getRandomInt(imageArray.length) - 1];
+            document.getElementById('questionImage').src = imageFile;
+            document.getElementById('questionImage').alt = `Question ${currentQuestion}`;
+        } else {
+            endQuiz();
+        }
+    }
+
+    function checkAnswer(answer) {
+        if (answer === correctAnswer) {
+            score++;
+        }
+        nextQuestion();
+    }
+
+    function endQuiz() {
+        let percentage = (score / totalQuestions) * 100;
+        let resultMessage;
+
+        if (percentage >= 75) {
+            resultMessage = "Perfect!";
+        } else if (percentage >= 50) {
+            resultMessage = "You should check your eyes.";
+        } else {
+            resultMessage = "You might have color blindness.";
+        }
+
+        document.body.innerHTML = `<h1>Colour Blind Finished!</h1>
+                                   <p>Your score: ${score}/${totalQuestions} (${percentage.toFixed(2)}%)</p>
+                                   <p>${resultMessage}</p>`;
+    }
+
+    // Start the quiz
+    nextQuestion();
+</script>
+
+</body>
+</html>
